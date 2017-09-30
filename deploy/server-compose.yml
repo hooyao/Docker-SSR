@@ -1,6 +1,6 @@
 version: '2'
 services:
-  ss-server:
+  ssr-server:
     container_name: ssr-server
     build:
       context: .
