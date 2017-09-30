@@ -1,0 +1,14 @@
+version: '2'
+services:
+  ss-client:
+    container_name: ssr-client
+    build:
+      context: ../
+      dockerfile: Dockerfile
+    image: ssr-libev
+    volumes:
+      - ./client.json:/root/config/config.json
+    entrypoint: ss-tunnel
+    command: -c /root/config/config.json
+    ports:
+      - "1080:1080"

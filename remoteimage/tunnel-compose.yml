@@ -1,0 +1,11 @@
+version: '2'
+services:
+  ss-client:
+    container_name: ssr-client
+    image: hooyao/ss-libev
+    volumes:
+      - ./client.json:/root/config/config.json
+    entrypoint: ss-tunnel
+    command: -c /root/config/config.json -L '127.0.0.1:1723'
+    ports:
+      - "1723:1080"
