@@ -1,0 +1,7 @@
+.idea/
+*.log
+*.iml
+*.DS_Store
+**.log
+**.zip
+**.rsc
