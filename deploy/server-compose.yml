@@ -2,13 +2,10 @@ version: '2'
 services:
   ssr-server:
     container_name: ssr-server
-    build:
-      context: .
-      dockerfile: ../Dockerfile
-    image: ssr-libev
+    image: breakwa11/shadowsocksr:latest
     volumes:
       - ./server.json:/root/config/config.json
-    entrypoint: ss-server
+    entrypoint: python server.py
     command: -c /root/config/config.json
     ports:
       - "19922:8338"

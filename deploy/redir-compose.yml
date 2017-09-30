@@ -5,7 +5,7 @@ services:
     image: hooyao/ss-libev:ssr
     volumes:
       - ./client.json:/root/config/config.json
-    entrypoint: ss-local
-    command: -c /root/config/config.json
+    entrypoint: ss-redir
+    command: -c /root/config/config.json -u
     ports:
-      - "1080:1080"
+      - "1081:1080"

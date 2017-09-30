@@ -7,7 +7,8 @@
   "method": "aes-128-ctr",
   "protocol": "auth_aes128_md5",
   "protocol_param": "32",
-  "obfs": "tls1.2_ticket_auth",
+  "obfs": "tls1.2_ticket_auth_compatible",
   "obfs_param": "",
-  "fast_open": true
+  "fast_open": true,
+  "workers": 4
 }
