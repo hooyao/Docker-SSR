@@ -10,3 +10,4 @@ services:
     ports:
       - "19922:8338"
       - "19922:8338/udp"
+    restart: always
