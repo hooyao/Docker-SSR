@@ -9,3 +9,4 @@ services:
     command: -c /root/config/config.json
     ports:
       - "19922:8338"
+      - "19922:8338/udp"
