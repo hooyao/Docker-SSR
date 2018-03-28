@@ -1,1 +1,1 @@
-#Check bransh ss and ssr
+#Check branch ss or ssr based on your needs
