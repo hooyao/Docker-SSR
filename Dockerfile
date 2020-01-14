@@ -1,27 +1,39 @@
-FROM ubuntu:16.04
+FROM alpine:3.11
 
-ENV DEPENDENCIES build-essential autoconf libtool libssl-dev \
-    gawk debhelper dh-systemd init-system-helpers pkg-config asciidoc xmlto apg libpcre3-dev
-ENV SSR_DIR /tmp/shadowsocksr-libev
-ENV SERVER_PORT 8338
+ARG SERVER_PORT=1080
+ARG CODE_URL=https://github.com/hooyao/shadowsocksr-libev/archive/master.zip
 
-ADD sources.list /etc/apt/sources.list
+#RUN sed -i 's/dl-cdn.alpinelinux.org/mirrors.aliyun.com/g' /etc/apk/repositories
+RUN apk add --no-cache --virtual .build-deps \
+                                asciidoc \
+                                autoconf \
+                                build-base \
+                                zlib-dev \
+                                curl \
+                                libtool \
+                                linux-headers \
+                                openssl-dev \
+                                pcre-dev \
+                                tar \
+                                xmlto && \
+    curl ${CODE_URL} -L --output /tmp/ssr.zip && \
+    cd /tmp && \
+    unzip ssr.zip -d /tmp -q -o && \
+    cd /tmp/shadowsocksr-libev-master && \
+    ./configure --prefix=/usr --disable-documentation && \
+    make install && \
+    runDeps="$( \
+        scanelf --needed --nobanner /usr/bin/ss-* \
+            | awk '{ gsub(/,/, "\nso:", $2); print "so:" $2 }' \
+            | xargs -r apk info --installed \
+            | sort -u \
+    )" && \
+    apk add --no-cache --virtual .run-deps $runDeps && \
+    apk del .build-deps && \
+    rm -f /var/cache/apk/* && \
+    rm -rf /tmp/*
 
-# Set up building environment
-RUN apt-get update \
- && apt-get install -y git-core
-RUN apt-get install --no-install-recommends -y $DEPENDENCIES
+RUN mkdir -p /root/config/ 
 
-# Get the latest code, build and install
-RUN git clone https://github.com/shadowsocksr-rm/shadowsocksr-libev.git $SSR_DIR
-WORKDIR $SSR_DIR
-RUN ./configure && make && make install
-RUN rm -rf $SSR_DIR
-
-# Tear down building environment and delete git repository
-WORKDIR /root
-RUN mkdir config
-
-# Port in the config file won't take affect. Instead we'll use 8388.
-EXPOSE $SERVER_PORT/tcp $SERVER_PORT/udp
+EXPOSE $SERVER_PORT/tcp $SERVER_PORT/udp            
 
